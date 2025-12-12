@@ -53,21 +53,33 @@ CREATE TABLE clientes (
     medicina_id INT
 );
 
--- inserto los clientes 
-INSERT INTO clientes VALUES ('1715128409', 'Kevin Rodriguez', '2002-11-06', 1);
-INSERT INTO clientes VALUES ('1756209837', 'Juan Perez', '2002-11-06', 2);
-INSERT INTO clientes VALUES ('1756986547', 'Roger Tallana', '2002-11-06', 3);
-INSERT INTO clientes VALUES ('1745792364', 'Erik Analuisa', '2005-09-06', 1);
-INSERT INTO clientes VALUES ('1790012345', 'Carlos Andrade', '1999-03-15', 4);
-INSERT INTO clientes VALUES ('1785567890', 'Daniela López', '2000-07-21', 5);
-INSERT INTO clientes VALUES ('1764433221', 'Sofia Molina', '1997-01-11', 6);
-INSERT INTO clientes VALUES ('1751122334', 'Jorge Ruiz', '1985-11-30', 7);
-INSERT INTO clientes VALUES ('1739988776', 'María Torres', '1994-06-18', 8);
-INSERT INTO clientes VALUES ('1723349876', 'Pedro Castillo', '1988-09-22', 4);
-INSERT INTO clientes VALUES ('1717723456', 'Elena Salinas', '2001-12-01', 5);
-INSERT INTO clientes VALUES ('1709988775', 'Luis Guerrero', '1995-02-10', 6);
-INSERT INTO clientes VALUES ('1795566123', 'Andrea Paredes', '1990-03-26', 7);
-INSERT INTO clientes VALUES ('1784455667', 'Mónica Herrera', '1993-08-09', 8);
+ALTER TABLE clientes
+ADD COLUMN telefono VARCHAR(15);
+
+ALTER TABLE clientes
+ADD COLUMN correo VARCHAR(100);
+
+ALTER TABLE clientes
+ADD COLUMN direccion VARCHAR(150);
+
+
+   -- INSERTAR CLIENTES
+DELETE FROM clientes;
+
+INSERT INTO clientes VALUES ('1715128409','Kevin Rodriguez','2002-11-06',1,'0981112233','kevin.rodriguez@gmail.com','Quito Norte');
+INSERT INTO clientes VALUES ('1756209837','Juan Perez','2002-11-06',2,'0982223344','juan.perez@gmail.com','Quito Centro');
+INSERT INTO clientes VALUES ('1756986547','Roger Tallana','2002-11-06',3,'0983334455','roger.tallana@gmail.com','Quito Sur');
+INSERT INTO clientes VALUES ('1745792364','Erik Analuisa','2005-09-06',1,'0984445566','erik.analuisa@gmail.com','Machachi');
+INSERT INTO clientes VALUES ('1790012345','Carlos Andrade','1999-03-15',4,'0985556677','carlos.andrade@gmail.com','Sangolquí');
+INSERT INTO clientes VALUES ('1785567890','Daniela López','2000-07-21',5,'0986667788','daniela.lopez@gmail.com','Quito Norte');
+INSERT INTO clientes VALUES ('1764433221','Sofía Molina','1997-01-11',6,'0987778899','sofia.molina@gmail.com','Cumbayá');
+INSERT INTO clientes VALUES ('1751122334','Jorge Ruiz','1985-11-30',7,'0988889900','jorge.ruiz@gmail.com','Tumbaco');
+INSERT INTO clientes VALUES ('1739988776','María Torres','1994-06-18',8,'0989990011','maria.torres@gmail.com','Guayaquil');
+INSERT INTO clientes VALUES ('1723349876','Pedro Castillo','1988-09-22',4,'0971112233','pedro.castillo@gmail.com','Ambato');
+INSERT INTO clientes VALUES ('1717723456','Elena Salinas','2001-12-01',5,'0972223344','elena.salinas@gmail.com','Quito Norte');
+INSERT INTO clientes VALUES ('1709988775','Luis Guerrero','1995-02-10',6,'0973334455','luis.guerrero@gmail.com','Riobamba');
+INSERT INTO clientes VALUES ('1795566123','Andrea Paredes','1990-03-26',7,'0974445566','andrea.paredes@gmail.com','Loja');
+INSERT INTO clientes VALUES ('1784455667','Mónica Herrera','1993-08-09',8,'0975556677','monica.herrera@gmail.com','Cuenca');
 
 
 -- TABLA CLIENTES FRECUENTES
@@ -149,7 +161,6 @@ INSERT INTO equivalencia VALUES (6, 18); -- Amoxicilina → Amoxil
 INSERT INTO equivalencia VALUES (7, 19); -- Azitromicina → Zithromax
 INSERT INTO equivalencia VALUES (8, 20); -- Ciprofloxacino → Cipro
 
-
 -- VERIFICACIONES
 
 SELECT * FROM medicinas;
@@ -159,4 +170,67 @@ SELECT * FROM medicinafrecuente;
 SELECT * FROM equivalencia;
 SHOW DATABASES;
 DESC equivalencia;
+
+-- creacion de la tabla datos de la empresa
+
+CREATE TABLE empresa(
+    ruc char(13),
+    razonsocial VARCHAR(100),
+    direccion VARCHAR(100),
+    telefono VARCHAR (14),
+    email VARCHAR(25)
+);
+
+INSERT INTO empresa VALUES('1756209837001', 'Salud Total', 'Av. 10 de agosto s/a', '0980596412','alissonchiguano@gmail.com');
+
+SELECT * FROM empresa;
+
+
+create table facturas(
+    facturanumero CHAR(10) PRIMARY key,
+    fecha DATE,
+    cedula char (10),
+    total DECIMAL(15,2)
+);
+
+alter table facturas
+add constraint facturascedula_fk
+Foreign Key (cedula) REFERENCES clientes(cedula);
+
+insert into facturas values('0000000001','2025-12-12', '1715128409', 5.25);
+INSERT INTO facturas values ('0000000002','2025-12-13', '1756209837', 5.25);
+
+SELECT * from facturas;
+
+CREATE table facturadetalle(
+    facturanumero CHAR(19),
+    medicamento_id int,
+    cantidad INT,
+    precio DECIMAL(15,2)
+);
+
+
+ALTER Table facturadetalle
+add PRIMARY KEY (facturanumero, medicamento_id);
+
+alter TABLE facturadetalle
+add constraint facturadetalle_cantidad_ck
+check (cantidad > 0);
+
+alter TABLE facturadetalle
+add constraint facturadetalle_precio_ck
+check (precio > 0);
+
+INSERT INTO facturadetalle VALUES ('0000000001', 9, 12, 2.50);
+INSERT INTO facturadetalle VALUES ('0000000001', 1, 5, 1.50);
+INSERT INTO facturadetalle VALUES ('0000000002', 3, 2, 1.80);
+INSERT INTO facturadetalle VALUES ('0000000002', 5, 6, 15.00);
+INSERT INTO facturadetalle VALUES ('0000000002', 6, 3, 1.20);
+SELECT * FROM facturadetalle;
+
+
+drop TABLE facturadetalle;
+DROP DATABASE saludtotal;
+
+
 
