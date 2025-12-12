@@ -232,5 +232,3 @@ SELECT * FROM facturadetalle;
 drop TABLE facturadetalle;
 DROP DATABASE saludtotal;
 
-
-
