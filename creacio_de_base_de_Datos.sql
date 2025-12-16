@@ -477,9 +477,8 @@ CREATE TABLE proveedor (
 );
 
 -- DATOS DE PROVEEDORES
-INSERT INTO proveedor VALUES
-('1700000000001', 'Bayer Ecuador', 'Luis Mayorga', 'mayorga@bayer.com'),
-('1700000000002', 'HealthCom', 'Andres Zotoz', 'soto@health.com');
+INSERT INTO proveedor VALUES ('1700000000001', 'Bayer Ecuador', 'Luis Mayorga', 'mayorga@bayer.com');
+INSERT INTO proveedor VALUES ('1700000000002', 'HealthCom', 'Andres Zotoz', 'soto@health.com');
 
 SELECT * FROM proveedor;
 -- TABLA PROVEEDOR_MEDICINAS
@@ -509,11 +508,10 @@ add CONSTRAINT medicina_proveedor_fk
 FOREIGN KEY (medicina_id)
 REFERENCES medicinas(id)
 
-INSERT INTO proveedor_medicinas VALUES
-('1700000000001', 1, 0.25, 100, 15),
-('1700000000001', 2, 0.12, 200, 30),
-('1700000000001', 3, 0.32, 300, 7),
-('1700000000002', 2, 0.10, 800, 7),
-('1700000000002', 3, 0.30, 250, 7);
+INSERT INTO proveedor_medicinas VALUES ('1700000000001', 1, 0.25, 100, 15);
+INSERT INTO proveedor_medicinas VALUES ('1700000000001', 2, 0.12, 200, 30);
+INSERT INTO proveedor_medicinas VALUES ('1700000000001', 3, 0.32, 300, 7);
+INSERT INTO proveedor_medicinas VALUES ('1700000000002', 2, 0.10, 800, 7);
+INSERT INTO proveedor_medicinas VALUES ('1700000000002', 3, 0.30, 250, 7);
 
 SELECT * FROM proveedor_medicinas;
