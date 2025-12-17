@@ -1,12 +1,13 @@
--- Creo la base de datos 
+-- Crear la base de datos
 CREATE DATABASE saludtotal;
 
--- seleccionamos la base de datos 
+-- Seleccionar la base de datos
 USE saludtotal;
 
+-- TABLA 1: medicinas
 
--- TABLA MEDICINAS (Genericas y comerciales)
 
+-- 1. Crear tabla
 CREATE TABLE medicinas (
     id INT PRIMARY KEY,
     nombre VARCHAR(100),
@@ -16,23 +17,34 @@ CREATE TABLE medicinas (
     fechacaducidad DATETIME
 );
 
+-- 3. ALTER TABLE para medicinas
 ALTER TABLE medicinas
 MODIFY COLUMN nombre VARCHAR(100) NOT NULL; -- no haya datos nulos
-
-INSERT INTO medicinas (id, nombre, precio, stock, fechacaducidad)
-VALUES (41, NULL, 1.50, 50, '2027-01-01 00:00:00');
--- tipo CHAR(3) DEFAULT 'GEN',
-INSERT INTO medicinas (id, nombre, precio, stock, fechacaducidad)
-VALUES (31, 'acetamol', 1.50, 50, '2027-01-01 00:00:00');
 
 -- valores permitidos para la columna tipo 
 ALTER TABLE medicinas
 ADD CONSTRAINT medicina_tipo_val
 CHECK (tipo IN ('GEN','COM'));
-INSERT INTO medicinas (id, nombre, precio, stock, fechacaducidad)
-VALUES (30, 'aceamol','gem', 1.50, 50, '2027-01-01 00:00:00');
 
--- inserto las medicinas genericas 
+ALTER TABLE medicinas
+ADD CONSTRAINT medicinas_uq
+UNIQUE (nombre);
+
+-- 2. INSERTS que prueban restricciones (fallarán después de los ALTER)
+-- INSERT INTO medicinas (id, nombre, precio, stock, fechacaducidad)
+-- VALUES (41, NULL, 1.50, 50, '2027-01-01 00:00:00');
+
+-- INSERT INTO medicinas (id, nombre, precio, stock, fechacaducidad)
+-- VALUES (31, 'acetamol', 1.50, 50, '2027-01-01 00:00:00');
+
+-- INSERT INTO medicinas (id, nombre, precio, stock, fechacaducidad, tipo)
+-- VALUES (30, 'aceamol', 1.50, 50, '2027-01-01 00:00:00', 'gem');
+
+
+
+-- 4. INSERTS correctos de medicinas
+-- Medicinas genéricas
+INSERT INTO medicinas VALUES (1, 'Paracetamol', 'GEN', 2.50, 60, '2027-02-01 00:00:00');
 INSERT INTO medicinas VALUES (2, 'Ibuprofeno', 'GEN', 2.00, 60, '2027-02-01 00:00:00');
 INSERT INTO medicinas VALUES (3, 'Naproxeno', 'GEN', 1.80, 45, '2027-03-01 00:00:00');
 INSERT INTO medicinas VALUES (4, 'Levotiroxina', 'GEN', 3.00, 70, '2027-04-01 00:00:00');
@@ -41,9 +53,7 @@ INSERT INTO medicinas VALUES (6, 'Amoxicilina', 'GEN', 1.20, 80, '2026-12-01 00:
 INSERT INTO medicinas VALUES (7, 'Azitromicina', 'GEN', 3.50, 55, '2027-06-01 00:00:00');
 INSERT INTO medicinas VALUES (8, 'Ciprofloxacino', 'GEN', 2.10, 40, '2027-07-01 00:00:00');
 
-
--- inserto las medicinas comerciales 
-
+-- Medicinas comerciales
 INSERT INTO medicinas VALUES (9,  'Finalín',   'COM', 2.50, 40, '2027-01-01 00:00:00');
 INSERT INTO medicinas VALUES (10, 'Panadol',   'COM', 3.00, 35, '2027-02-01 00:00:00');
 INSERT INTO medicinas VALUES (11, 'Tempra',    'COM', 2.80, 30, '2027-03-01 00:00:00');
@@ -57,9 +67,10 @@ INSERT INTO medicinas VALUES (18, 'Amoxil',    'COM', 2.50, 60, '2026-11-01 00:0
 INSERT INTO medicinas VALUES (19, 'Zithromax', 'COM', 6.80, 32, '2027-03-01 00:00:00');
 INSERT INTO medicinas VALUES (20, 'Cipro',     'COM', 5.75, 28, '2027-04-01 00:00:00');
 
+-- TABLA 2: clientes
 
--- TABLA CLIENTES
 
+-- 1. Crear tabla
 CREATE TABLE clientes (
     cedula CHAR(10) PRIMARY KEY,
     nombre VARCHAR(100),
@@ -70,7 +81,11 @@ CREATE TABLE clientes (
     direccion VARCHAR(150)
 );
 
+-- 2. No hay INSERT de prueba para restricciones en clientes
 
+-- 3. No hay ALTER específicos para clientes (solo FK en otras tablas)
+
+-- 4. INSERTS correctos de clientes
 DELETE FROM clientes;
 
 INSERT INTO clientes VALUES ('1715128409','Kevin Rodriguez','2002-11-06',1,'0981112233','kevin.rodriguez@gmail.com','Quito Norte');
@@ -84,8 +99,10 @@ INSERT INTO clientes VALUES ('1751122334','Jorge Ruiz','1985-11-30',7,'098888990
 INSERT INTO clientes VALUES ('1739988776','María Torres','1994-06-18',8,'0989990011','maria.torres@gmail.com','Guayaquil');
 
 
--- TABLA CLIENTES FRECUENTES
+-- TABLA 3: clientesFrecuente
 
+
+-- 1. Crear tabla
 CREATE TABLE clientesFrecuente (
     cedula CHAR(10),
     medicina_id INT,
@@ -94,6 +111,9 @@ CREATE TABLE clientesFrecuente (
     descuento DECIMAL(5,2)
 );
 
+-- 2. No hay INSERT de prueba
+
+-- 3. ALTER TABLE para clientesFrecuente
 ALTER TABLE clientesFrecuente
 ADD PRIMARY KEY (cedula, medicina_id);
 
@@ -105,16 +125,16 @@ ALTER TABLE clientesFrecuente
 ADD CONSTRAINT clientesfrecuente_medicina_fk
 FOREIGN KEY (medicina_id) REFERENCES medicinas(id);
 
-
+-- 4. INSERTS correctos
 INSERT INTO clientesFrecuente VALUES ('1715128409', 4, 'Hipertensión', 'men', 0.10);
 INSERT INTO clientesFrecuente VALUES ('1756209837', 5, 'Diabetes Tipo 2', 'men', 0.05);
 INSERT INTO clientesFrecuente VALUES ('1756986547', 6, 'Asma', 'sem', 0.08);
 INSERT INTO clientesFrecuente VALUES ('1739988776', 7, 'Colesterol alto', 'cri', 0.07);
 INSERT INTO clientesFrecuente VALUES ('1790012345', 8, 'Hipotiroidismo', 'sem', 0.06);
 
+-- TABLA 4: medicinafrecuente
 
--- TABLA MEDICINA FRECUENTE
-
+-- 1. Crear tabla
 CREATE TABLE medicinafrecuente (
     cliente_cedula CHAR(10),
     medicina_id INT,
@@ -122,44 +142,46 @@ CREATE TABLE medicinafrecuente (
     descuentos DECIMAL(5,2)
 );
 
-ALTER TABLE medicinafrecuente
-ADD CONSTRAINT clientecedula_fk FOREIGN KEY (cliente_cedula)
-REFERENCES clientes(cedula);
+-- 2. No hay INSERT de prueba
 
-ALTER TABLE medicinafrecuente
-ADD CONSTRAINT medicina_fk FOREIGN KEY (medicina_id)
-REFERENCES medicinas(id);
-
+-- 3. ALTER TABLE para medicinafrecuente
 ALTER TABLE medicinafrecuente
 ADD PRIMARY KEY (cliente_cedula, medicina_id);
 
+ALTER TABLE medicinafrecuente
+ADD CONSTRAINT clientecedula_fk 
+FOREIGN KEY (cliente_cedula) REFERENCES clientes(cedula);
+
+ALTER TABLE medicinafrecuente
+ADD CONSTRAINT medicina_fk 
+FOREIGN KEY (medicina_id) REFERENCES medicinas(id);
+
+-- 4. INSERT correcto
 INSERT INTO medicinafrecuente VALUES ('1739988776', 12, 'men', 0.25);
 
--- Relación: ID genérico  y ID comercial
+-- TABLA 5: equivalencia
 
--- CREACIÓN DE TABLA EQUIVALENCIA
+-- 1. Crear tabla
 CREATE TABLE equivalencia (
     id_generico INT,
     id_comercial INT
 );
 
--- añadir validacion de clave foranea al medicamento generico 
+-- 2. No hay INSERT de prueba
+
+-- 3. ALTER TABLE para equivalencia
 ALTER TABLE equivalencia
 ADD CONSTRAINT equivalencia_generico_fk
-FOREIGN KEY (id_generico)
-REFERENCES medicinas(id);
+FOREIGN KEY (id_generico) REFERENCES medicinas(id);
 
--- añadir validacion de clave foranea al medicamento comercial
 ALTER TABLE equivalencia
 ADD CONSTRAINT equivalencia_comercial_fk
-FOREIGN KEY (id_comercial)
-REFERENCES medicinas(id);
+FOREIGN KEY (id_comercial) REFERENCES medicinas(id);
 
--- añadir la validacion de clave prymaria al medcamento generico y al medicamenro comercial 
-ALTER table equivalencia
+ALTER TABLE equivalencia
 ADD PRIMARY KEY (id_generico, id_comercial);
 
-
+-- 4. INSERTS correctos
 INSERT INTO equivalencia VALUES (1, 9); -- Paracetamol → Finalín
 INSERT INTO equivalencia VALUES (1, 10); -- Paracetamol → Panadol
 INSERT INTO equivalencia VALUES (1, 11); -- Paracetamol → Tempra
@@ -173,18 +195,10 @@ INSERT INTO equivalencia VALUES (6, 18); -- Amoxicilina → Amoxil
 INSERT INTO equivalencia VALUES (7, 19); -- Azitromicina → Zithromax
 INSERT INTO equivalencia VALUES (8, 20); -- Ciprofloxacino → Cipro
 
--- VERIFICACIONES
 
-SELECT * FROM medicinas;
-SELECT * FROM clientes;
-SELECT * FROM clientesfrecuente;
-SELECT * FROM medicinafrecuente;
-SELECT * FROM equivalencia;
-SHOW DATABASES;
-DESC equivalencia;
+-- TABLA 6: empresa
 
--- creacion de la tabla datos de la empresa
-
+-- 1. Crear tabla
 CREATE TABLE empresa(
     ruc char(13),
     razonsocial VARCHAR(100),
@@ -193,68 +207,78 @@ CREATE TABLE empresa(
     email VARCHAR(25)
 );
 
+-- 2. No hay INSERT de prueba
+
+-- 3. No hay ALTER
+
+-- 4. INSERT correcto
 INSERT INTO empresa VALUES('1756209837001', 'Salud Total', 'Av. 10 de agosto s/a', '0980596412','alissonchiguano@gmail.com');
 
-SELECT * FROM empresa;
+-- TABLA 7: facturas
 
-
-create table facturas(
-    facturanumero CHAR(10) PRIMARY key,
+-- 1. Crear tabla
+CREATE TABLE facturas(
+    facturanumero CHAR(10) PRIMARY KEY,
     fecha DATE,
-    cedula char (10),
+    cedula CHAR(10),
     total DECIMAL(15,2)
 );
 
-alter table facturas
-add constraint facturascedula_fk
-Foreign Key (cedula) REFERENCES clientes(cedula);
+-- 2. No hay INSERT de prueba
 
-insert into facturas values('0000000001','2025-12-12', '1715128409', 5.25);
-INSERT INTO facturas values ('0000000002','2025-12-13', '1756209837', 5.25);
+-- 3. ALTER TABLE para facturas
+ALTER TABLE facturas
+ADD CONSTRAINT facturascedula_fk
+FOREIGN KEY (cedula) REFERENCES clientes(cedula);
 
-SELECT * from facturas;
+-- 4. INSERTS correctos
+INSERT INTO facturas VALUES('0000000001','2025-12-12', '1715128409', 5.25);
+INSERT INTO facturas VALUES ('0000000002','2025-12-13', '1756209837', 5.25);
 
-CREATE table facturadetalle(
+
+-- TABLA 8: facturadetalle
+
+-- 1. Crear tabla
+CREATE TABLE facturadetalle(
     facturanumero CHAR(19),
-    medicamento_id int,
+    medicamento_id INT,
     cantidad INT,
     precio DECIMAL(15,2)
 );
 
+-- 2. No hay INSERT de prueba
 
-ALTER Table facturadetalle
-add PRIMARY KEY (facturanumero, medicamento_id);
+-- 3. ALTER TABLE para facturadetalle
+ALTER TABLE facturadetalle
+ADD PRIMARY KEY (facturanumero, medicamento_id);
 
-alter TABLE facturadetalle
-add constraint facturadetalle_cantidad_ck
-check (cantidad > 0);
+ALTER TABLE facturadetalle
+ADD CONSTRAINT facturadetalle_cantidad_ck
+CHECK (cantidad > 0);
 
-alter TABLE facturadetalle
-add constraint facturadetalle_precio_ck
-check (precio > 0);
+ALTER TABLE facturadetalle
+ADD CONSTRAINT facturadetalle_precio_ck
+CHECK (precio > 0);
 
--- VALIDACIONES FACTURA DETALLE
 ALTER TABLE facturadetalle
 ADD CONSTRAINT facturadetalle_factura_fk
-FOREIGN KEY (facturanumero)
-REFERENCES facturas(facturanumero);
+FOREIGN KEY (facturanumero) REFERENCES facturas(facturanumero);
 
 ALTER TABLE facturadetalle
 ADD CONSTRAINT facturadetalle_medicina_fk
-FOREIGN KEY (medicamento_id)
-REFERENCES medicinas(id);
+FOREIGN KEY (medicamento_id) REFERENCES medicinas(id);
 
+-- 4. INSERTS correctos
 INSERT INTO facturadetalle VALUES ('0000000001', 9, 12, 2.50);
 INSERT INTO facturadetalle VALUES ('0000000001', 1, 5, 1.50);
 INSERT INTO facturadetalle VALUES ('0000000002', 3, 2, 1.80);
 INSERT INTO facturadetalle VALUES ('0000000002', 5, 6, 15.00);
 INSERT INTO facturadetalle VALUES ('0000000002', 6, 3, 1.20);
-SELECT * FROM facturadetalle;
 
 
+-- TABLA 9: proveedor
 
-
--- TABLA PROVEEDOR
+-- 1. Crear tabla
 CREATE TABLE proveedor (
     ruc CHAR(13) PRIMARY KEY,
     nombre VARCHAR(100),
@@ -262,51 +286,58 @@ CREATE TABLE proveedor (
     email VARCHAR(100)
 );
 
--- DATOS DE PROVEEDORES
+
+-- 4. INSERTS correctos
 INSERT INTO proveedor VALUES ('1700000000001', 'Bayer Ecuador', 'Luis Mayorga', 'mayorga@bayer.com');
 INSERT INTO proveedor VALUES ('1700000000002', 'HealthCom', 'Andres Zotoz', 'soto@health.com');
 
-SELECT * FROM proveedor;
--- TABLA PROVEEDOR_MEDICINAS
+
+-- TABLA 10: proveedor_medicinas
+
+-- 1. Crear tabla
 CREATE TABLE proveedor_medicinas (
     proveedor_ruc CHAR(13),
     medicina_id INT,
     proveedor_precio DECIMAL(10,2),
     lote INT,
     plazo INT
-
 );
 
-    -- CLAVE PRIMARIA (evita repetir proveedor con mismo precio)
-ALTER table proveedor_medicinas
-add PRIMARY KEY (proveedor_ruc, proveedor_precio);
+-- 2. No hay INSERT de prueba
 
-    -- CLAVE FORÁNEA: proveedor debe existir
+-- 3. ALTER TABLE para proveedor_medicinas
+ALTER TABLE proveedor_medicinas
+ADD PRIMARY KEY (proveedor_ruc, proveedor_precio);
 
-alter TABLE proveedor_medicinas
-add CONSTRAINT proveedor_fk
-FOREIGN KEY (proveedor_ruc)
-REFERENCES proveedor(ruc);
+ALTER TABLE proveedor_medicinas
+ADD CONSTRAINT proveedor_fk
+FOREIGN KEY (proveedor_ruc) REFERENCES proveedor(ruc);
 
-    -- CLAVE FORÁNEA: medicina debe existir
-alter TABLE proveedor_medicinas
-add CONSTRAINT medicina_proveedor_fk
-FOREIGN KEY (medicina_id)
-REFERENCES medicinas(id);
+ALTER TABLE proveedor_medicinas
+ADD CONSTRAINT medicina_proveedor_fk
+FOREIGN KEY (medicina_id) REFERENCES medicinas(id);
 
+-- 4. INSERTS correctos
 INSERT INTO proveedor_medicinas VALUES ('1700000000001', 1, 0.25, 100, 15);
 INSERT INTO proveedor_medicinas VALUES ('1700000000001', 2, 0.12, 200, 30);
 INSERT INTO proveedor_medicinas VALUES ('1700000000001', 3, 0.32, 300, 7);
 INSERT INTO proveedor_medicinas VALUES ('1700000000002', 2, 0.10, 800, 7);
 INSERT INTO proveedor_medicinas VALUES ('1700000000002', 3, 0.30, 250, 7);
 
+-- CONSULTAS DE VERIFICACIÓN 
+
+SELECT * FROM medicinas;
+SELECT * FROM clientes;
+SELECT * FROM clientesfrecuente;
+SELECT * FROM medicinafrecuente;
+SELECT * FROM equivalencia;
+SELECT * FROM empresa;
+SELECT * FROM facturas;
+SELECT * FROM facturadetalle;
+SELECT * FROM proveedor;
 SELECT * FROM proveedor_medicinas;
 
-DROP DATABASE saludtotal;
+SHOW DATABASES;
+DESC equivalencia;
 
----Atributo email unico en la tabla clientes (es para que no se repita los correos de clientes)
-alter table medicinas
-add constraint medicinas_uq
-UNIQUE (nombre);
-
-INSERT INTO medicinas VALUES (1, 'finalin', 'GEN', 1.50, 50, '2027-01-01 00:00:00');
+ DROP DATABASE saludtotal;
