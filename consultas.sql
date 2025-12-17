@@ -4,6 +4,7 @@ SELECT * FROM medicinas;
 SELECT COUNT (*) from clientes;
 SELECT COUNT (*) FROM medicinas;
 
+use saludtotal;
 -- caso: consultar los datos de un cliente por su numero de cedula 
 
 SELECT *
@@ -89,3 +90,16 @@ SELECT
 FROM medicinas
 WHERE tipo = 'GEN'
   AND NOMBRE LIKE 'P%';
+
+-- operadores logicos de comparacion 
+SELECT 
+    cedula, 
+    nombre, 
+    fechanacimiento
+FROM clientes
+WHERE fechanacimiento < '1990-01-01';
+
+SELECT id, nombre, precio
+FROM medicinas
+WHERE precio BETWEEN 6 AND 10;
+
