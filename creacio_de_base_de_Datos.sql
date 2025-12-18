@@ -53,6 +53,8 @@ INSERT INTO medicinas VALUES (6, 'Amoxicilina', 'GEN', 1.20, 80, '2026-12-01 00:
 INSERT INTO medicinas VALUES (7, 'Azitromicina', 'GEN', 3.50, 55, '2027-06-01 00:00:00');
 INSERT INTO medicinas VALUES (8, 'Ciprofloxacino', 'GEN', 2.10, 40, '2027-07-01 00:00:00');
 
+
+UPDATE medicinas SET precio =1.20 WHERE id =1;
 -- Medicinas comerciales
 INSERT INTO medicinas VALUES (9,  'Finalín',   'COM', 2.50, 40, '2027-01-01 00:00:00');
 INSERT INTO medicinas VALUES (10, 'Panadol',   'COM', 3.00, 35, '2027-02-01 00:00:00');
@@ -75,6 +77,7 @@ CREATE TABLE clientes (
     cedula CHAR(10) PRIMARY KEY,
     nombre VARCHAR(100),
     fechanacimiento DATE,
+    tipo CHAR (3),
     medicina_id INT,
     telefono VARCHAR(15),
     correo VARCHAR(100),
@@ -88,15 +91,15 @@ CREATE TABLE clientes (
 -- 4. INSERTS correctos de clientes
 DELETE FROM clientes;
 
-INSERT INTO clientes VALUES ('1715128409','Kevin Rodriguez','2002-11-06',1,'0981112233','kevin.rodriguez@gmail.com','Quito Norte');
-INSERT INTO clientes VALUES ('1756209837','Juan Perez','2002-11-06',2,'0982223344','juan.perez@gmail.com','Quito Centro');
-INSERT INTO clientes VALUES ('1756986547','Roger Tallana','2002-11-06',3,'0983334455','roger.tallana@gmail.com','Quito Sur');
-INSERT INTO clientes VALUES ('1745792364','Erik Analuisa','2005-09-06',1,'0984445566','erik.analuisa@gmail.com','Machachi');
-INSERT INTO clientes VALUES ('1790012345','Carlos Andrade','1999-03-15',4,'0985556677','carlos.andrade@gmail.com','Sangolquí');
-INSERT INTO clientes VALUES ('1785567890','Daniela López','2000-07-21',5,'0986667788','daniela.lopez@gmail.com','Quito Norte');
-INSERT INTO clientes VALUES ('1764433221','Sofía Molina','1997-01-11',6,'0987778899','sofia.molina@gmail.com','Cumbayá');
-INSERT INTO clientes VALUES ('1751122334','Jorge Ruiz','1985-11-30',7,'0988889900','jorge.ruiz@gmail.com','Tumbaco');
-INSERT INTO clientes VALUES ('1739988776','María Torres','1994-06-18',8,'0989990011','maria.torres@gmail.com','Guayaquil');
+INSERT INTO clientes VALUES ('1715128409','Kevin Rodriguez','2002-11-06','nat',1,'0981112233','kevin.rodriguez@gmail.com','Quito Norte');
+INSERT INTO clientes VALUES ('1756209837','Juan Perez','2002-11-06','nat',2,'0982223344','juan.perez@gmail.com','Quito Centro');
+INSERT INTO clientes VALUES ('1756986547','Roger Tallana','2002-11-06','nat',3,'0983334455','roger.tallana@gmail.com','Quito Sur');
+INSERT INTO clientes VALUES ('1745792364','Erik Analuisa','2005-09-06','nat',1,'0984445566','erik.analuisa@gmail.com','Machachi');
+INSERT INTO clientes VALUES ('1790012345','Carlos Andrade','1999-03-15','nat',4,'0985556677','carlos.andrade@gmail.com','Sangolquí');
+INSERT INTO clientes VALUES ('1785567890','Daniela López','2000-07-21','nat',5,'0986667788','daniela.lopez@gmail.com','Quito Norte');
+INSERT INTO clientes VALUES ('1764433221','Sofía Molina','1997-01-11','nat',6,'0987778899','sofia.molina@gmail.com','Cumbayá');
+INSERT INTO clientes VALUES ('1751122334','Jorge Ruiz','1985-11-30','nat',7,'0988889900','jorge.ruiz@gmail.com','Tumbaco');
+INSERT INTO clientes VALUES ('1739988776','María Torres','1994-06-18','nat',8,'0989990011','maria.torres@gmail.com','Guayaquil');
 
 
 -- TABLA 3: clientesFrecuente
@@ -132,7 +135,7 @@ INSERT INTO clientesFrecuente VALUES ('1756986547', 6, 'Asma', 'sem', 0.08);
 INSERT INTO clientesFrecuente VALUES ('1739988776', 7, 'Colesterol alto', 'cri', 0.07);
 INSERT INTO clientesFrecuente VALUES ('1790012345', 8, 'Hipotiroidismo', 'sem', 0.06);
 
--- TABLA 4: medicinafrecuente
+
 
 -- 1. Crear tabla
 CREATE TABLE medicinafrecuente (
@@ -313,6 +316,7 @@ ALTER TABLE proveedor_medicinas
 ADD CONSTRAINT proveedor_fk
 FOREIGN KEY (proveedor_ruc) REFERENCES proveedor(ruc);
 
+-- añadir validacion de clave foranea sieve para ver que este declarado antes  en la tabla de proveedor medicinas
 ALTER TABLE proveedor_medicinas
 ADD CONSTRAINT medicina_proveedor_fk
 FOREIGN KEY (medicina_id) REFERENCES medicinas(id);
@@ -340,4 +344,4 @@ SELECT * FROM proveedor_medicinas;
 SHOW DATABASES;
 DESC equivalencia;
 
- DROP DATABASE saludtotal;
+
