@@ -103,3 +103,68 @@ SELECT id, nombre, precio
 FROM medicinas
 WHERE precio BETWEEN 6 AND 10;
 
+-- consultar los pacientes de medicina frecuente
+-- en una lista que incluya:
+-- nombre y cedula del paciente, nombre e id de la medicina,
+-- descuento
+
+SELECT
+    cliente_cedula AS cedula,
+    (SELECT nombre from clientes WHERE cedula = cliente_cedula) AS cliente,
+    medicina_id AS medicinas,
+    (SELECT nombre from medicinas WHERE id = medicina_id)AS nombremedicina,
+    descuentos
+FROM
+    medicinafrecuente;
+-- listar los clientes y las medicinas que tienen un descuento
+-- menor al descuento que el cliente de la cedula 0102030401
+
+SELECT
+    cliente_cedula AS cedula,
+    (SELECT nombre from clientes WHERE cedula = cliente_cedula) AS cliente,
+    medicina_id AS medicinas,
+    (SELECT nombre from medicinas WHERE id = medicina_id)AS nombremedicina,
+    descuentos
+FROM
+  medicinafrecuente
+WHERE descuentos < (
+                    SELECT descuentos
+                    FROM medicinafrecuente
+                    WHERE cliente_cedula ='1739988776'
+);
+
+
+SELECT precio 
+FROM medicinas 
+WHERE id =86;
+
+-- caso: listado de pacientes del plan medicinas frecuete
+-- presente en el precio final de la medicina junto
+-- con el precio sin descuento 
+
+
+SELECT
+    cliente_cedula AS cedula,
+
+    (SELECT nombre 
+     FROM clientes
+     WHERE cedula = cliente_cedula) AS paciente,
+
+    medicina_id AS id_medicina,
+
+    (SELECT nombre 
+     FROM medicinas 
+     WHERE id = medicina_id) AS nombre_medicina,
+
+    (SELECT precio
+     FROM medicinas
+     WHERE id = medicina_id) AS precio_sin_descuento,
+
+    descuentos AS descuento_porcentaje,
+      (
+         select precio *(1- descuentos) as precio_final
+         from medicinas
+         where id = medicina_id
+      ) AS precio_final
+FROM
+    medicinafrecuente;
