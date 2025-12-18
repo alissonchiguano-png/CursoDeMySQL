@@ -168,3 +168,72 @@ SELECT
       ) AS precio_final
 FROM
     medicinafrecuente;
+
+
+    -- mismo caso pero ahora con producto carteciano JOIN
+SELECT
+    medicinafrecuente.cliente_cedula AS cedula,
+    clientes.nombre AS paciente,
+    medicinafrecuente.medicina_id AS id_medicina,
+    medicinas.nombre AS nombre_medicina,
+    medicinas.precio AS precio_sin_descuento,
+    medicinafrecuente.descuentos AS descuento_porcentaje,
+    medicinas.precio * (1 - medicinafrecuente.descuentos) AS precio_final
+FROM
+    medicinafrecuente
+JOIN
+    clientes
+        ON medicinafrecuente.cliente_cedula = clientes.cedula
+JOIN
+    medicinas
+        ON medicinafrecuente.medicina_id = medicinas.id;
+
+
+-- caso: las medicinas cmerciales pueden ser remplazadas por 
+--       sus correspondietes medicinas génericas.
+--       Elaborar un listado que compare el precio de la medicina comercial
+--       con su equivalencia genérico
+SELECT
+    
+
+    (SELECT nombre 
+     FROM medicinas 
+     WHERE id = id_comercial) AS medicina_comercial,
+
+    (SELECT precio 
+     FROM medicinas 
+     WHERE id = id_comercial) AS precio_comercial,
+
+    (SELECT nombre 
+     FROM medicinas 
+     WHERE id = id_generico) AS medicina_generica,
+
+    (SELECT precio 
+     FROM medicinas 
+     WHERE id = id_generico) AS precio_generico,
+    (
+        (SELECT precio FROM medicinas WHERE id = id_comercial)
+        -
+        (SELECT precio FROM medicinas WHERE id = id_generico)
+    ) AS ahorro
+
+FROM
+    equivalencia;
+
+-- mismo caso de con join
+SELECT
+    medicinas_comercial.nombre AS medicina_comercial,
+    medicinas_comercial.precio AS precio_comercial,
+
+    medicinas_generica.nombre AS medicina_generica,
+    medicinas_generica.precio AS precio_generico,
+
+    medicinas_comercial.precio - medicinas_generica.precio AS ahorro
+FROM
+    equivalencia
+JOIN
+    medicinas AS medicinas_comercial
+        ON equivalencia.id_comercial = medicinas_comercial.id
+JOIN
+    medicinas AS medicinas_generica
+        ON equivalencia.id_generico = medicinas_generica.id;
