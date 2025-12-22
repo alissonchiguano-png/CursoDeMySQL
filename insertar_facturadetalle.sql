@@ -1,0 +1,21 @@
+
+use saludtotal;
+SELECT COUNT (*) FROM facturadetalle;
+INSERT INTO facturadetalle VALUES ('0000000003', 45, 8, 3.75);
+INSERT INTO facturadetalle VALUES ('0000000003', 112, 5, 9.38);
+INSERT INTO facturadetalle VALUES ('0000000003', 23, 12, 2.50);
+INSERT INTO facturadetalle VALUES ('0000000004', 78, 6, 12.50);
+INSERT INTO facturadetalle VALUES ('0000000004', 34, 10, 4.20);
+INSERT INTO facturadetalle VALUES ('0000000004', 89, 15, 1.81);
+INSERT INTO facturadetalle VALUES ('0000000005', 56, 9, 4.08);
+INSERT INTO facturadetalle VALUES ('0000000005', 12, 7, 4.50);
+INSERT INTO facturadetalle VALUES ('0000000006', 113, 4, 18.00);
+INSERT INTO facturadetalle VALUES ('0000000006', 17, 3, 35.20);
+INSERT INTO facturadetalle VALUES ('0000000007', 65, 5, 9.50);
+INSERT INTO facturadetalle VALUES ('0000000007', 28, 20, 1.60);
+INSERT INTO facturadetalle VALUES ('0000000007', 91, 8, 2.60);
+INSERT INTO facturadetalle VALUES ('0000000008', 39, 12, 2.00);
+INSERT INTO facturadetalle VALUES ('0000000008', 107, 2, 11.00);
+INSERT INTO facturadetalle VALUES ('0000000009', 120, 10, 6.00);
+INSERT INTO facturadetalle VALUES ('0000000009', 5, 4, 15.00);
+INSERT INTO facturadetalle VALUES ('0000000009', 72, 8, 4.30);
