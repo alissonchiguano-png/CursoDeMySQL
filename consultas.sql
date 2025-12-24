@@ -48,7 +48,8 @@ SELECT
     id,
     nombre
 FROM medicinas
-WHERE nombre like 'F%';
+WHERE nombre like 'v%';
+
 
 SELECT
     cedula,
@@ -326,6 +327,146 @@ SELECT
 FROM facturadetalle fd
 JOIN medicinas m ON fd.medicamento_id = m.id
 WHERE fd.facturanumero = '0000000001';
+
+SELECT
+*
+from medicinas
+WHERE id not in 
+(
+    SELECT medicina_id from clientesfrecuente
+);
+
+SELECT
+*
+from medicinas m
+join clientesfrecuente cf on m.id = cf.medicina_id;
+
+
+SELECT
+*
+from clientesfrecuente cf
+left join medicinas m on m.id = cf.medicina_id;
+
+
+-- caso:lista ordenada de clientes por nombre alfabetico 
+
+SELECT * from clientes
+ORDER BY fechanacimiento;
+
+-- caso: cliente mas joven 
+SELECT  nombre, fechanacimiento
+from clientes
+ORDER BY fechanacimiento 
+DESC LIMIT 1;
+-- caso:conocer las 5 medicinas mas caras que tenemos 
+use saludtotal;
+SELECT id, nombre, precio
+FROM medicinas
+ORDER BY precio DESC
+LIMIT 5;
+
+-- caso: conocer las 5 medicinas mas baratas 
+SELECT id, nombre, precio
+FROM medicinas
+ORDER BY precio 
+LIMIT 5;
+
+-- caso: la medicina comercial mas barata 
+SELECT id, nombre, precio
+FROM medicinas
+WHERE tipo = 'COM'
+ORDER BY precio 
+LIMIT 1;
+
+-- caso: la medicina generica mas cara
+SELECT id, nombre, precio
+FROM medicinas
+WHERE tipo = 'GEN'
+ORDER BY precio DESC
+LIMIT 1;
+
+-- caso: las 5 medicinas comerciales con el menor descuento
+
+SELECT * from clientesfrecuente WHERE medicina_id=4;
+INSERT INTO clientesFrecuente VALUES ('0102030401', 4, 'Hipertensión', 'men', 0.10);
+SELECT
+    nombre,
+    precio,
+    descuentos
+FROM clientesfrecuente 
+WHERE tipo = 'COM'
+ORDER BY descuentos;
+
+SELECT nombre
+FROM medicinas
+WHERE id in (
+    SELECT id
+    FROM medicinafrecuente
+    JOIN medicinas on id = medicina_id
+    WHERE tipo = 'COM'
+    order by descuentos 
+    );
+
+use saludtotal;
+SELECT DISTINCT
+    m.id,
+    m.nombre,
+    m.precio,
+    mf.descuentos
+FROM medicinafrecuente mf
+JOIN medicinas m
+    ON mf.medicina_id = m.id
+WHERE id in (
+    SELECT id
+    FROM medicinafrecuente
+    JOIN medicinas on id = medicina_id
+    WHERE tipo = 'COM'
+    )
+order by descuentos 
+LIMIT 5;
+
+-- caso: agrupamientos
+SELECT tipo, COUNT(*) AS numero 
+FROM clientes
+GROUP BY tipo;
+
+DESC medicinas;
+
+SELECT id, nombre, precio, stock,
+precio *stock 
+FROM medicinas;
+
+SELECT tipo,
+SUM (precio * stock)
+FROM medicinas
+GROUP BY tipo;
+
+-- caso facturas detalle. Valor monerario por medicina vendida
+select medicamento_id, cantidad, precio, 
+cantidad * precio as subtotal 
+FROM facturadetalle
+ORDER BY medicamento_id;
+
+SELECT fd.medicamento_id, m.nombre,
+SUM(fd.cantidad * fd.precio)
+FROM facturadetalle fd
+JOIN medicinas m ON m.id =fd.medicamento_id
+GROUP BY medicamento_id
+ORDER BY medicamento_id;
+
+-- caso: mejor cliente de la farmacia
+SELECT
+    c.cedula,
+    c.nombre,
+    SUM(fd.cantidad * fd.precio) AS total_comprado
+FROM clientes c
+JOIN facturas f
+    ON c.cedula = f.cedula
+JOIN facturadetalle fd
+    ON f.facturanumero = fd.facturanumero
+GROUP BY c.cedula, c.nombre
+ORDER BY total_comprado DESC
+LIMIT 1;
 
 
 
