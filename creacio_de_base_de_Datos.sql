@@ -54,7 +54,7 @@ INSERT INTO medicinas VALUES (7, 'Azitromicina', 'GEN', 3.50, 55, '2027-06-01 00
 INSERT INTO medicinas VALUES (8, 'Ciprofloxacino', 'GEN', 2.10, 40, '2027-07-01 00:00:00');
 
 
-UPDATE medicinas SET precio =1.20 WHERE id =1;
+UPDATE medicinas SET fechacaducidad = '2026-03-03 00:00:00' WHERE id =10;
 -- Medicinas comerciales
 INSERT INTO medicinas VALUES (9,  'Finalín',   'COM', 2.50, 40, '2027-01-01 00:00:00');
 INSERT INTO medicinas VALUES (10, 'Panadol',   'COM', 3.00, 35, '2027-02-01 00:00:00');
@@ -70,7 +70,7 @@ INSERT INTO medicinas VALUES (19, 'Zithromax', 'COM', 6.80, 32, '2027-03-01 00:0
 INSERT INTO medicinas VALUES (20, 'Cipro',     'COM', 5.75, 28, '2027-04-01 00:00:00');
 
 -- TABLA 2: clientes
-
+SELECT * from medicinas;
 
 -- 1. Crear tabla
 CREATE TABLE clientes (

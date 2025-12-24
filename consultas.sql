@@ -468,5 +468,96 @@ GROUP BY c.cedula, c.nombre
 ORDER BY total_comprado DESC
 LIMIT 1;
 
+-- caso: proyecion dde la venta total del stock, tomando en cuenta 
+-- el descuento para las medicinas del plan de medicina frecuente
+use saludtotal;
+SELECT id, nombre, precio, stock,
+precio * stock 
+FROM medicinas;
+
+use saludtotal;
+
+CREATE VIEW v_proyeccion_ventas 
+AS
+SELECT 
+    m.id,
+    m.nombre,
+    m.precio,
+    m.stock,
+    mf.descuentos,
+    m.precio * (1 - mf.descuentos/100) AS nuevo_precio
+FROM medicinas m
+JOIN medicinafrecuente mf 
+    ON m.id = mf.medicina_id
+
+UNION
+
+SELECT 
+    m.id,
+    m.nombre,
+    m.precio,
+    m.stock,
+    0 AS descuentos,
+    m.precio AS nuevo_precio
+FROM medicinas m
+WHERE m.id is null;
+
+-- caso: 
+
+SELECT
+sum(nuevo_precio * stock)  
+FROM 
+v_proyeccion_ventas;
+ -- averiguar que medicinas vencen en el proyimo mes
+
+
+SELECT
+    id,
+    nombre,
+    fechacaducidad
+FROM medicinas
+WHERE fechacaducidad >= DATE_ADD(LAST_DAY(CURDATE()), INTERVAL 1 DAY)
+  AND fechacaducidad <= LAST_DAY(DATE_ADD(CURDATE(), INTERVAL 1 MONTH))
+ORDER BY fechacaducidad;
+
+-- cronograma de vencimientos a 3 meses vista 
+
+CREATE VIEW vista_cronograma_vencimientos AS
+SELECT
+    id,
+    nombre,
+    fechacaducidad,
+    'Enero' AS mes_vencimiento
+FROM medicinas
+WHERE fechacaducidad >= DATE_ADD(LAST_DAY(CURDATE()), INTERVAL 1 DAY)
+  AND fechacaducidad <= LAST_DAY(DATE_ADD(CURDATE(), INTERVAL 1 MONTH))
+
+UNION
+
+SELECT
+    id,
+    nombre,
+    fechacaducidad,
+    'Febrero' AS mes_vencimiento
+FROM medicinas
+WHERE fechacaducidad >= DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL 1 MONTH)), INTERVAL 1 DAY)
+  AND fechacaducidad <= LAST_DAY(DATE_ADD(CURDATE(), INTERVAL 2 MONTH))
+
+UNION
+
+
+SELECT
+    id,
+    nombre,
+    fechacaducidad,
+    'Marzo' AS mes_vencimiento
+FROM medicinas
+WHERE fechacaducidad >= DATE_ADD(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL 2 MONTH)), INTERVAL 1 DAY)
+  AND fechacaducidad <= LAST_DAY(DATE_ADD(CURDATE(), INTERVAL 3 MONTH));
+
+SELECT *
+FROM vista_cronograma_vencimientos
+ORDER BY fechacaducidad;
+
 
 
