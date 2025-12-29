@@ -345,3 +345,19 @@ SHOW DATABASES;
 DESC equivalencia;
 
 
+CREATE TABLE compras (
+    compranumero INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATE NOT NULL
+);
+CREATE TABLE compradetalle (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    compranumero INT NOT NULL,
+    medicamento_id INT NOT NULL,
+    cantidad INT NOT NULL,
+
+    FOREIGN KEY (compranumero)
+        REFERENCES compras(compranumero),
+
+    FOREIGN KEY (medicamento_id)
+        REFERENCES medicinas(id)
+);
